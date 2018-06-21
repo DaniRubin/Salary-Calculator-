@@ -1,6 +1,15 @@
 tdLine = "<td>"
 travelLine='<td colspan=1>'
 
+Resultfile= r'C:\Users\user1\Desktop\לימודים\Salary-Calculator-\result.txt'
+
+
+
+def writeToResultFile(line): 
+	res = open(Resultfile,'a')
+	res.write(line)
+	res.close()
+
 
 
 def	copyFiles(fileHtml,file):
@@ -79,14 +88,38 @@ def calculateMas(key,pay,file,keyToPrint):
 		if key in line:
 			time = findHowMuchTime(file,num)
 			sum+=time
-
 	if sum:
-		print(sum*pay," - ףסכ ",sum," - ןמז ", keyToPrint)
+		moneyLine="    "+(str)(sum*pay)+" - ףסכ "+(str)(sum)+" - ןמז "+keyToPrint
+		print(moneyLine)
 
-
-
+		if key[0]=='>':
+			key=key[1:-1]
+		moneyLine = makeWriteLine(key = key,time = (str)(sum),money = (str)(sum*pay))
+		writeToResultFile(moneyLine)
+	
 
 	return sum*pay
+
+
+
+def makeWriteLine(key,time,money):
+	oneSpace=' '
+
+	if key=='פיתוח תוכן וירטואלי HTML (מוקד לאומי)':
+		line = 'פיתוח HTML'
+	else:
+		line = key
+	
+	while(len(line)!=35):
+		line+=oneSpace
+	line+='כסף - '+money
+	while(len(line)!=55):
+		line+=oneSpace
+	line+='זמן -  '+time
+	return line+'\n'
+
+
+
 
 
 def claculateTravelTotal(line):
@@ -143,12 +176,20 @@ def claculateTravelMoney(key,file,keyToPrint):
 				seen = True
 			else:
 				check=True
-	print(money," - ףסכ ", keyToPrint)
+	
+	travelMoneyLine="    " +(str)(money)+" - ףסכ "+keyToPrint
+	print(travelMoneyLine)
+
+	travelMoneyLine = "\n"+key + "   כסף -  "+(str)(money)
+	writeToResultFile(travelMoneyLine+'\n')
 
 	return money
 
 
 def main():
+	res = open(Resultfile,'w')
+	res.write('')
+	res.close()
 	theValues= {("הכרדה",'>הדרכה<'):70,
 				(" HTML חותיפ",'פיתוח תוכן וירטואלי HTML (מוקד לאומי)'):70,
 				("ןכות חותיפ",'>פיתוח תוכן<'):70,
@@ -169,11 +210,11 @@ def main():
 				("פייקס","תגבור וירטואלי - בסקייפ"):50,
 				("ץיק הנחמ","מחנה קיץ"):50
 				}
-
+	print("\n\n")
 	travel="נסיעות מיוחדות"
 	endFile = '<!-- end: PAGE CONTENT-->'
-	file= r'C:\Users\user1\Desktop\mascoret\lol.txt'
-	fileHtml= r'C:\Users\user1\Desktop\mascoret\CyberNet_ monthly_reports.html'
+	file= r'C:\Users\user1\Desktop\לימודים\Salary-Calculator-\lol.txt'
+	fileHtml= r'C:\Users\user1\Desktop\לימודים\Salary-Calculator-\CyberNet_ monthly_reports.html'
 
 	copyFiles(fileHtml,file)
 
@@ -185,11 +226,10 @@ def main():
 		keyToPrint,key=Allkey
 		sum+= calculateMas(key,pay,file,keyToPrint)	
 	sum+= claculateTravelMoney(travel,file,"תועיסנ")
-		
-	print("\n\n\nAll the amount is - ",sum)
-
-
-
+	
+	finalLine = "\n     All the amount is - "+(str)(sum)+"\n\n\n\n\n"
+	print(finalLine)
+	writeToResultFile(finalLine)
 
 
 main()
